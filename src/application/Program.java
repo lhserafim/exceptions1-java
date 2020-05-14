@@ -38,7 +38,9 @@ public class Program {
             System.out.print("Check-out date (dd/MM/yyyy): ");
             checkOut = sdf.parse(sc.next());
 
+            /* Versão VERY BAD
             // fazendo de forma ruim!!
+            // Pq lógica de programação no programa principal
             Date now = new Date();
             // || significa OU
             // se datas do checkin e checkout forem antes de hoje
@@ -51,6 +53,16 @@ public class Program {
             else {
                 // atualizar reserva
                 reservation.updateDates(checkIn, checkOut);
+                System.out.println("Reservation: " + reservation);
+            }
+            */
+            // Versão BAD
+            // atualizar reserva recebendo String
+            String error = reservation.updateDates(checkIn, checkOut);
+            if (error != null) {
+                System.out.println("Error in reservation: " + error);
+            }
+            else {
                 System.out.println("Reservation: " + reservation);
             }
         }
