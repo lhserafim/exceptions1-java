@@ -1,24 +1,59 @@
 package application;
 
 import model.entities.Reservation;
+import model.exceptions.DomainException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+// Remover a throws para a boa solução
 public class Program {
-    public static void main(String args[]) throws ParseException {
+    public static void main(String args[]) {
         Scanner sc = new Scanner(System.in);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        System.out.print("Room number: ");
-        int number = sc.nextInt();
-        System.out.print("Check-in date (dd/MM/yyyy): ");
-        Date checkIn = sdf.parse(sc.next());
-        System.out.print("Check-out date (dd/MM/yyyy): ");
-        Date checkOut = sdf.parse(sc.next());
+        try {
+            System.out.print("Room number: ");
+            int number = sc.nextInt();
+            System.out.print("Check-in date (dd/MM/yyyy): ");
+            Date checkIn = sdf.parse(sc.next());
+            System.out.print("Check-out date (dd/MM/yyyy): ");
+            Date checkOut = sdf.parse(sc.next());
+            // instanciei esta reserva
+            Reservation reservation = new Reservation(number, checkIn, checkOut);
+            System.out.println("Reservation: " + reservation);
+            // atualizar reserva
+            // Implementar o update de datas
+            System.out.println();
+            System.out.println("Enter data to update the reservation:");
+            System.out.print("Check-in date (dd/MM/yyyy): ");
+            checkIn = sdf.parse(sc.next());
+            System.out.print("Check-out date (dd/MM/yyyy): ");
+            checkOut = sdf.parse(sc.next());
+            reservation.updateDates(checkIn, checkOut);
+            System.out.println("Reservation updated: " + reservation);
+        }
+        catch (ParseException e) {
+            System.out.println("Invalid date format");
+        }
+        // Se for exceção padrão
+        // catch (IllegalArgumentException e) {
+        // Exceção personalizada
+        catch (DomainException e) {
+            System.out.println(e.getMessage()); // retorna a exceção tratada
+        }
+        catch (InputMismatchException e) {
+            System.out.print("Input Mismatch");
+        }
+        // igual ao WHEN OTHERS THEN
+        catch (RuntimeException e) {
+            System.out.println("Unexpected error");
+        }
 
+        /* Para a GOOD SOLUTION,tirar todas as validações do programa e colocar nas classes
         // Verificar se a data de checkOut é menor que a data de checkIn
         // ! => Significa NÃO, ou seja, SE NÃO
         // se a data de checkout NÃO FOR maior que a de checkin...
@@ -55,7 +90,7 @@ public class Program {
                 reservation.updateDates(checkIn, checkOut);
                 System.out.println("Reservation: " + reservation);
             }
-            */
+
             // Versão BAD
             // atualizar reserva recebendo String
             String error = reservation.updateDates(checkIn, checkOut);
@@ -66,7 +101,7 @@ public class Program {
                 System.out.println("Reservation: " + reservation);
             }
         }
-
+        */
         sc.close();
     }
 }

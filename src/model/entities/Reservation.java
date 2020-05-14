@@ -1,5 +1,7 @@
 package model.entities;
 
+import model.exceptions.DomainException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -14,7 +16,10 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
+    public Reservation(Integer roomNumber, Date checkIn, Date checkOut) throws DomainException{ // propagar com throws
+        if (!checkOut.after(checkIn)) {
+            throw new DomainException("Check-out date must be after check-in date");
+        }
         this.roomNumber = roomNumber;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -49,8 +54,11 @@ public class Reservation {
         this.checkOut = checkOut;
     }
     */
+    // VERSÃO BAD SOLUTIONS
     // Alterei o método p/ retornar String
+    /*
     public String updateDates(Date checkIn, Date checkOut) {
+
         Date now = new Date();
         if (checkIn.before(now) || (checkOut.before(now))) {
             return "Reservation dates for update must be future dates";
@@ -63,6 +71,25 @@ public class Reservation {
         // para poder compilar, retorno NULL, pois a variável String exige.
         // neste caso, null = sucesso
         return null;
+    }
+    */
+    // VERSÃO GOOD SOLUTION
+    // Necessário propagar a exceção na declaração do método
+    public void updateDates(Date checkIn, Date checkOut) throws DomainException {
+        Date now = new Date();
+        if (checkIn.before(now) || (checkOut.before(now))) {
+            // usar throw para lançar a exceção e instanciar uma exceção de argumentos informados inválidos
+            // usando exceções padrões
+            //throw new IllegalArgumentException("Reservation dates for update must be future dates");
+
+            // usando exceção personalizada
+            throw new DomainException("Reservation dates for update must be future dates");
+        }
+        if (!checkOut.after(checkIn)) {
+            throw new DomainException("Check-out date must be after check-in date");
+        }
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
     }
 
     @Override
